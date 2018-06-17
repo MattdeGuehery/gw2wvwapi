@@ -11,28 +11,40 @@ PUBLIC.base_url = base_url;
 
 PUBLIC.getBuildNumber = function() {
     let endpoint = '/v2/build';
-    HTTP.httpGet(base_url + endpoint);
+    return HTTP.Promise.httpGet(base_url + endpoint).then(function(result) {
+        return result;
+    });
 }
 
 PUBLIC.parseIDQueryParams = function(ids) {
     let formattedIds = '';
     if (ids && Array.isArray(ids) && ids.length) {
         // It's an array
-        formattedIds = ids.split(',');
-    } else if (typeof ids === 'string') {
-        if (ids.indexOf(' ') !== -1) {
-            throw new Error('ids parameter cannot contain spaces');
+        formattedIds = ids.join(',');
+    } else {
+        if (typeof ids === 'string') {
+            if (ids.indexOf(' ') !== -1) {
+                throw new Error('ids parameter cannot contain spaces');
+            }
         }
+
         formattedIds = ids;
     }
     query_param = '?ids=' + formattedIds;
     return query_param;
 }
 
-PUBLIC.gw2apiSuccess = function(data, message) {
+PUBLIC.gw2apiSuccess = function(result, message) {
+    if (arguments.length === 1 && typeof arguments[0] === 'string') {
+        this.message = result;
+    } else if (arguments.length === 1 && typeof arguments[0] !== 'string') {
+        this.data = result.data;
+        this.message = 'Success';
+    } else {
+        this.data = result.data;
+        this.message = message;
+    }
     this.success = true;
-    this.data = data;
-    this.message = message;
 }
 
 PUBLIC.gw2apiError = function(message) {

@@ -6,9 +6,9 @@ const base_endpoint = '/v2/guild';
 
 PUBLIC.Get = {};
 
-PUBLIC.Get.Guild_ById = function(guildid) {
+PUBLIC.Get.ById = function(guildid) {
     let url = API.base_url + base_endpoint + '/' + guildid;
-    HTTP.httpGet(url).then((result) => {
+    return HTTP.Promise.httpGet(url).then((result) => {
         return result;
     });
 }

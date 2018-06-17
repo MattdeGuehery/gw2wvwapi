@@ -1,29 +1,32 @@
-const request = require('request');
-const rp = require('request-promise');
+const axios = require('axios');
 let PUBLIC = {};
 
-PUBLIC.httpGet = function(url_address) {
-    let options = {
-        method: 'GET',
-        url: url.parse(url_address),
-    }
+PUBLIC.Promise = {};
 
-    return rp(options);
+function _reqget(url) {
+    return axios.get(url).then(function(result) {
+        return result.data;
+    });
 }
 
-PUBLIC.httpPost = function(url_address, body) {
-    let options = {
-        method: 'POST',
-        url: url.parse(url_address),
-    }
-
-    return rp(options);
+function _reqpost(url, data) {
+    return axios.post(url, data).then(function(result) {
+        return result.data;
+    });
 }
 
-PUBLIC.httpGetWithAuth = function(url_address, apikey) {
+PUBLIC.httpGet = async function(url_address) {
+    return _reqget(url_address);
+}
+
+PUBLIC.httpPost = async function(url_address, body) {
+    return _reqpost(url_address, body);
+}
+
+PUBLIC.httpGetWithAuth = async function(url_address, apikey) {
     let options = {
         method: 'GET',
-        url: url.parse(url_address),
+        url: url_address,
         auth: {
             user: null,
             pass: null,
@@ -32,13 +35,14 @@ PUBLIC.httpGetWithAuth = function(url_address, apikey) {
         }
     }
 
-    return rp(options);
+    return _req(options);
 }
 
-PUBLIC.httpPostWithAuth = function(url_address, apikey) {
+PUBLIC.httpPostWithAuth = async function(url_address, body, apikey) {
     let options = {
         method: 'POST',
-        url: url.parse(url_address),
+        url: url_address,
+        data: body,
         auth: {
             user: null,
             pass: null,
@@ -47,7 +51,66 @@ PUBLIC.httpPostWithAuth = function(url_address, apikey) {
         }
     }
 
-    return rp(options);
+    return _req(options);
+}
+
+PUBLIC.Promise.httpGet = async function(url_address) {
+    /**
+     * Returns a promise
+     */
+    return axios.get(url_address);
+}
+
+PUBLIC.Promise.httpPost = async function(url_address, body) {
+    /**
+     * Returns a promise
+     */
+    let options = {
+        method: 'POST',
+        data: body,
+        url: url_address,
+    }
+
+    return axios.get(options);
+}
+
+
+PUBLIC.Promise.httpGetWithAuth = async function(url_address, apikey) {
+    /**
+     * Returns a promise
+     */
+    let options = {
+        method: 'GET',
+        url: url_address,
+        auth: {
+            user: null,
+            pass: null,
+            sendImmediately: true,
+            bearer: apiKey
+        }
+    }
+
+    return axios.get(options);
+}
+
+
+PUBLIC.Promise.httpPostWithAuth = async function(url_address, body, apikey) {
+    /**
+     * Returns a promise
+     */
+    let options = {
+        method: 'POST',
+        url: url_address,
+        data: body,
+        auth: {
+            user: null,
+            pass: null,
+            sendImmediately: true,
+            bearer: apiKey
+        }
+    }
+
+    return axios.get(options);
 }
 
 module.exports = PUBLIC;

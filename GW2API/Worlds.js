@@ -9,20 +9,20 @@ const base_endpoint = '/v2/worlds';
  */
 PUBLIC.Get = {};
 
-PUBLIC.Get.Worlds_All = function() {
+PUBLIC.Get.All = function() {
     let URL = API.base_url + base_endpoint;
-    HTTP.httpGet(URL).then((result) => {
-
+    return HTTP.Promise.httpGet(URL).then((result) => {
+        return result;
     });
 }
 
-PUBLIC.Get.Worlds_ById = function(worldids) {
+PUBLIC.Get.ById = function(worldids) {
     /**
      * Takes a comma separated strings of worldids
      */
     var query_param = API.parseQueryParams(worldids);
     let URL = API.base_url + base_endpoint + query_param;
-    HTTP.httpGet(URL).then((result) => {
+    return HTTP.Promise.httpGet(URL).then((result) => {
         return result;
     })
 }
