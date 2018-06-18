@@ -36,7 +36,7 @@ async function api_request(req, res) {
 		}
 		result = new GW2API.API.gw2apiSuccess(result);
     } catch(e) {
-		result = new API.gw2apiError(e.toString());
+		result = new GW2API.API.gw2apiError(e.toString());
 	}
 
 	res.send(result);

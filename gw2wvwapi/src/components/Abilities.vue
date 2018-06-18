@@ -1,10 +1,24 @@
 <template>
     <div>
         <el-row class="margin-space-bottom" :gutter="10">
-            <el-col :span="8"><el-button :loading="isLoading" type="primary" class="restore-abilities" @click="restoreAbilities()">Restore All Abilities</el-button></el-col>
-            <el-col :span="8"><el-button :loading="isLoading" type="primary" class="restore-abilities" @click="refreshAbilities()">Refresh Abilities</el-button></el-col>
-            <el-col :span="8"><el-button :loading="isLoading" type="primary" class="restore-abilities" @click="undoAbilityRemove()">Undo Remove</el-button></el-col>
+            <el-col :span="12"><el-button :loading="isLoading" type="primary" class="abilities-button" @click="restoreAbilities">Restore All Abilities</el-button></el-col>
+            <el-col :span="12"><el-button :disabled="Object.keys(removedAbilities).length === 0" :loading="isLoading" type="primary" class="abilities-button" @click="undoAbilityRemove">Undo Remove</el-button></el-col>
         </el-row>
+        <el-collapse class="margin-space-bottom collapse">
+            <el-row class="margin-space-bottom">
+                <el-col :span="24"><el-button :disabled="checkedAbilities.length === 0" :loading="isLoading" type="primary" class="abilities-button" @click="getSelectedAbilities">Get Selected Abilities</el-button></el-col>
+            </el-row>
+            <el-row class="margin-space-bottom">
+                <el-col>
+                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleSelectAllChange" border>Select All</el-checkbox>
+                </el-col>
+                <el-checkbox-group v-model="checkedAbilities" @change="handleAbilitySelection">
+                    <el-col :span="24">
+                        <el-checkbox v-for="ability in AllAbilities" :name="ability.name" :label="ability.name" :value="ability.name" :checked="ability.isChecked" :key="ability.id" border>{{ ability.name }}</el-checkbox>
+                    </el-col>
+                </el-checkbox-group>
+            </el-row>
+        </el-collapse>
         <el-container class="margin-space-bottom" v-for="(a, index) in Abilities" :key="a.id">
             <el-aside width="128px"><img class="aside icon" :src="a.icon" /></el-aside>
             <el-container>
@@ -31,51 +45,130 @@
 </template>
 
 <script>
-    import axios from 'axios'
     export default {
         name: 'Abilities',
-        data: function() {
+        data() {
             return {
+                checkAbilities: [],
+                checkAll: false,
+                isIndeterminate: false
             }
         },
-        mounted: function() {
+        mounted() {
             this.$store.dispatch('getAllAbilities');
         },
         methods: {
+            handleSelectAllChange(value) {
+                if (value) {
+                    var abilityArray = [];
+                    for (var i in this.$store.state.abilities.Abilities) {
+                        abilityArray.push(i);
+                    }
+                    this.checkAbilities = abilityArray;
+                } else {
+                    this.checkAbilities = [];
+                }
+                this.$store.commit('selectAllAbilities', value);
+                this.isIndeterminate = false;
+            },
+            handleAbilitySelection(value) {
+                if (value && value.length) {
+                    var abilityLength = Object.keys(this.$store.state.abilities.AllAbilities).length;
+                    this.checkAll = value.length === abilityLength;
+                    this.$store.commit('selectAbility', value[value.length - 1]);
+                }
+                this.isIndeterminate = this.checkAbilities.length > 0 && this.checkAbilities.length < abilityLength;
+            },
+            getSelectedAbilities() {
+                var abilityids = this.checkedAbilities.map(x => this.$store.state.abilities.AllAbilities[x].id);
+                console.log(abilityids);
+                this.$store.dispatch('getAbilities', abilityids);
+            },
             removeAbility(index) {
-                this.$store.commit('removeAbility', index);
+                this.$store.dispatch('removeAbility', index);
             },
             undoAbilityRemove() {
-                this.$store.commit('undoAbilityRemove')
+                this.$store.dispatch('undoAbilityRemove');
             },
-            restoreAbilities: function() {
+            restoreAbilities() {
                 this.$store.dispatch('getAllAbilities');
-            },
-            getAbilities: function(abilities) {
-                this.$store.dispatch('getAbilities', abilities);
-            },
-            refreshAbilities: function() {
             }
         },
         computed: {
+            checkedAbilities: {
+                set(value) {
+                    var abilitiesChecked = [];
+                    if (value) {
+                        if (value.length < this.checkAbilities.length) {
+                            this.checkAbilities = value;
+                        } else {
+                            value.forEach(v => {
+                                if (this.checkAbilities.indexOf(v) === -1) {
+                                    this.checkAbilities.push(v);
+                                }
+                            });
+                        }
+                        value.forEach(v => {
+                            if (abilitiesChecked.indexOf(v) === -1) {
+                                abilitiesChecked.push(this.$store.state.abilities.Abilities[v]);
+                            }
+                        })
+                    } else {
+                        var keys = Object.keys(this.$store.state.abilities.Abilities);
+                        for (var i in keys) {
+                            if (this.$store.state.abilities.Abilities[keys[i]].isChecked) {
+                                abilitiesChecked.push(this.$store.state.abilities.Abilities[keys[i]]);
+                            }
+                        }
+                    }
+                    return abilitiesChecked;
+                },
+                get(){
+                    return this.checkAbilities;
+                }
+            },
             Abilities() {
-                return this.$store.state.abilities.Abilities;
+                var abilities = this.$store.state.abilities.Abilities;
+                var abilitiesArray = Object.keys(abilities).sort((a,b) => {
+                    var ab = parseInt(abilities[a].index);
+                    var ba = parseInt(abilities[b].index);
+                    return ab > ba ? 1 : ab < ba ? -1 : 0 
+                }).map(x => abilities[x]);
+                
+                var abilitiesObj = {};
+                var obj = abilitiesArray.reduce((acc, cur) => {
+                    abilitiesObj[cur.name] = cur;
+                    return abilitiesObj;
+                }, {});
+                return abilitiesObj;
             },
             AllAbilities() {
                 return this.$store.state.abilities.AllAbilities;
             },
             isLoading() {
                 return this.$store.state.abilities.isLoading;
+            },
+            removedAbilities() {
+                return this.$store.state.abilities.removedAbilities;
             }
         }
     }
 </script>
 
 <style>
-    .restore-abilities {
+    .abilities-button {
         display: inline-block;
         font-size: 1.2em;
-        width: 30em;
+        width: 40em;
+    }
+
+    .collapse {
+        padding-top: 20px;
+        background-color: #EFEFEF;
+    }
+
+    .el-checkbox {
+        background-color: #FFFFFF;
     }
 
     .margin-space-bottom {
