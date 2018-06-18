@@ -1,39 +1,39 @@
 <template>
     <div>
         <el-container>
-            <el-aside width="100px"></el-aside>
+            <el-aside width="2em"></el-aside>
             <el-main>
                 <el-row>
-                    <el-col :span="15" class="calcheader">Ability</el-col>
-                    <el-col :span="2" class="calcheader"><el-button @click="clearAllRanks()">Clear All</el-button></el-col>
-                    <el-col :span="3" class="calcheader">Rank Level</el-col>
-                    <el-col :span="2" class="calcheader"><el-button @click="maxAllRanks()">Max All</el-button></el-col>
-                    <el-col :span="2"><el-card shadow="never">{{ totalRanks }}</el-card></el-col>
+                    <el-col :xs="6" :sm="6" :md="8" :lg="12" :xl="15" class="calcheader">Ability</el-col>
+                    <el-col :xs="5" :sm="5" :md="4" :lg="3" :xl="2" class="calcheader"><el-button @click="clearAllRanks()">Clear All</el-button></el-col>
+                    <el-col :xs="5" :sm="5" :md="5" :lg="4" :xl="3" class="calcheader">Rank Level</el-col>
+                    <el-col :xs="5" :sm="5" :md="4" :lg="3" :xl="2" class="calcheader"><el-button @click="maxAllRanks()">Max All</el-button></el-col>
+                    <el-col :xs="3" :sm="3" :md="3" :lg="2" :xl="2"><el-card shadow="never">{{ totalRanks }}</el-card></el-col>
                 </el-row>
                 <el-row v-for="(a, index) in AllAbilities" :key="a.id">
                     <el-col :class="{'odd': index % 2 === 0, 'padding-space-top': true }" :span="24">
                         <el-row>
-                            <el-col :span="2"><img class="calcicon" :src="a.icon" /></el-col>
-                            <el-col :span="13" class="calcabilities">
+                            <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2"><img class="calcicon" :src="a.icon" /></el-col>
+                            <el-col :xs="4" :sm="4" :md="6" :lg="9" :xl="13" class="calcabilities">
                                 <b>{{ a.name }}</b>
                                 <el-row>
                                     <el-col>{{ a.description }}</el-col>
                                 </el-row>
                             </el-col>
-                            <el-col :span="2"><el-button @click="clearRank(a)">Clear</el-button><el-button @click="decrementRank(a)">-</el-button></el-col>
-                            <el-col :span="3">
+                            <el-col :xs="5" :sm="5" :md="4" :lg="3" :xl="2"><el-button @click="clearRank(a)">Clear</el-button><el-button @click="decrementRank(a)">-</el-button></el-col>
+                            <el-col :xs="5" :sm="5" :md="5" :lg="4" :xl="3">
                                 <el-tooltip v-for="(r, i) in a.ranks" :key="i" :open-delay=openDelay placement="top">
                                     <div slot="content">{{ r.effect }}</div>
                                     <div @click="adjustToRank(a, i)" :class="{ 'calcranks': true, 'calcrankshover': i < a.rankLevel, 'calcranksactive': a.rankLevel == a.ranks.length }"></div>
                                 </el-tooltip>
                             </el-col>
-                            <el-col :span="2"><el-button @click="incrementRank(a)">+</el-button><el-button @click="maxRank(a)">Max</el-button></el-col>
-                            <el-col :span="2" class="padding-space-right"><el-card  shadow="never">{{ a.totalCost }}</el-card></el-col>
+                            <el-col :xs="5" :sm="5" :md="4" :lg="3" :xl="2"><el-button @click="incrementRank(a)">+</el-button><el-button @click="maxRank(a)">Max</el-button></el-col>
+                            <el-col :xs="3" :sm="3" :md="3" :lg="3" :xl="2" class="padding-space-right"><el-card shadow="never">{{ a.totalCost }} / {{ a.maxCost }}</el-card></el-col>
                         </el-row>
                     </el-col>
                 </el-row>
             </el-main>
-            <el-aside width="100px"></el-aside>
+            <el-aside width="2em"></el-aside>
         </el-container>
     </div>
 </template>
@@ -108,8 +108,16 @@ import Vue from 'vue'
             AllAbilities() {
                 var abilities = Object.keys(this.$store.state.abilities.AllAbilities).map(x => this.$store.state.abilities.AllAbilities[x]);
                 abilities.forEach(a => {
+                    var maxcost = a.ranks.reduce((b, c) => {
+                        if (b.hasOwnProperty('cost')) {
+                            return parseInt(b.cost) + parseInt(c.cost);    
+                        } else {
+                            return parseInt(b) + parseInt(c.cost);
+                        }
+                    });
                     Vue.set(a, 'rankLevel', 0);
                     Vue.set(a, 'totalCost', 0);
+                    Vue.set(a, 'maxCost', maxcost);
                 });
                 this.Abilities = abilities;
                 return this.Abilities;

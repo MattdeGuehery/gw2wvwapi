@@ -88,10 +88,7 @@ export default {
         },
         getAllAbilities(store) {
             store.commit('isLoading', true);
-            var data = {
-                command: "WvW.Get.Abilities.All"
-            }
-            axios.post('/api', data)
+            axios.post('/api', { command: "WvW.Get.Abilities.All" })
             .then((result) => {
                 store.commit('isLoading', false);
                 var body = result.data.data;

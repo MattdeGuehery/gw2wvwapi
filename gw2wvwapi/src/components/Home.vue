@@ -3,12 +3,15 @@
         <div class="darkMode">
             <span class="darkModeText">Dark Mode </span><el-switch @click="switchDarkMode" v-model="darkMode" :label="darkMode" :checked="darkMode" active-color="#123123"></el-switch>
         </div>
-        <el-tabs type="card" @tab-click="switchTab">
+        <el-tabs type="card">
             <el-tab-pane label="Abilities">
                 <abilities></abilities>
             </el-tab-pane>
             <el-tab-pane label="Abilities Calculator">
-                <abilitiescalculator></abilitiescalculator>
+                <abilities-calculator></abilities-calculator>
+            </el-tab-pane>
+            <el-tab-pane label="Ranks">
+                <ranks></ranks>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -17,6 +20,7 @@
 <script>
     import Abilities from '@/components/Abilities'
     import AbilitiesCalculator from '@/components/AbilitiesCalculator'
+    import Ranks from '@/components/Ranks'
     import store from '../store'
     export default {
         data() {
@@ -25,12 +29,10 @@
         },
         components: {
             'abilities': Abilities,
-            'abilitiescalculator': AbilitiesCalculator
+            'abilities-calculator': AbilitiesCalculator,
+            'ranks': Ranks
         },
         methods: {
-            switchTab(tab, event) {
-                console.log(tab, event);
-            },
             switchDarkMode() {
                 this.darkMode = !this.darkMode;
             }
@@ -60,7 +62,7 @@
      * Dark Mode
     ***************************************/
 
-    .darkmode body {
-        background-color: 
+    body.darkmode {
+        background-color: black;
     }
 </style>

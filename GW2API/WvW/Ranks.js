@@ -16,7 +16,7 @@ PUBLIC.Get.Ranks.All = function() {
     let url = current_url;
 
     return HTTP.Promise.httpGet(url).then(function(result) {
-        return result;
+        return PUBLIC.Get.Ranks.ByIds(result.data);
     });
 }
 PUBLIC.Get.Ranks.ById = function(rankid) {
