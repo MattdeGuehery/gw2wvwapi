@@ -4,25 +4,27 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --recursive",
     "start": "node server.js",
-    "dev-webpack": "webpack-dev-server --inline --hot --no-info",
-    "dev": "start npm run dev-webpack && start npm start"
+    "docs": "./node_modules/.bin/jsdoc GW2API --recurse --private --destination ./docs --readme ./README.md",
+    "client": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "start npm run start && start npm run client"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.0",
-    "body-parser": "^1.18.3",
-    "express": "^4.16.3",
-    "vue": "^2.5.16",
-    "webpack-dev-server": "^3.1.4"
+    "axios": "~0.18.0",
+    "body-parser": "~1.18.3",
+    "express": "~4.16.3",
+    "vue": "~2.5.16",
+    "webpack-dev-server": "~3.1.4"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "express": "^4.16.3",
-    "mocha": "^5.2.0",
-    "vue": "^2.5.16",
-    "vue-cli": "^2.9.6"
+    "chai": "~4.1.2",
+    "express": "~4.16.3",
+    "jsdoc": "~3.5.5",
+    "mocha": "~5.2.0",
+    "vue": "~2.5.16",
+    "vue-cli": "~2.9.6"
   }
 }

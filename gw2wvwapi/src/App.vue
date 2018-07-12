@@ -11,7 +11,6 @@ export default {
 </script>
 
 <style>
-
 * {
   font-family: 'IBM Plex Sans', sans-serif;
 }

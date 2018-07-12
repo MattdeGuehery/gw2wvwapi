@@ -16,7 +16,7 @@ PUBLIC.Get.Objectives.All = function() {
     let url = current_url;
 
     return HTTP.Promise.httpGet(url).then(function(result) {
-        return result;
+        return PUBLIC.Get.Objectives.ByIds(result.data);
     });
 }
 

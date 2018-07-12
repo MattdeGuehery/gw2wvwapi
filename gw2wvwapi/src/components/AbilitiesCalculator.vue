@@ -13,7 +13,9 @@
                 <el-row v-for="(a, index) in AllAbilities" :key="a.id">
                     <el-col :class="{'odd': index % 2 === 0, 'padding-space-top': true }" :span="24">
                         <el-row>
-                            <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2"><img class="calcicon" :src="a.icon" /></el-col>
+                            <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
+                                <!-- <img class="calcicon" :src="a.icon" /> -->
+                            </el-col>
                             <el-col :xs="4" :sm="4" :md="6" :lg="9" :xl="13" class="calcabilities">
                                 <b>{{ a.name }}</b>
                                 <el-row>
@@ -108,13 +110,7 @@ import Vue from 'vue'
             AllAbilities() {
                 var abilities = Object.keys(this.$store.state.abilities.AllAbilities).map(x => this.$store.state.abilities.AllAbilities[x]);
                 abilities.forEach(a => {
-                    var maxcost = a.ranks.reduce((b, c) => {
-                        if (b.hasOwnProperty('cost')) {
-                            return parseInt(b.cost) + parseInt(c.cost);    
-                        } else {
-                            return parseInt(b) + parseInt(c.cost);
-                        }
-                    });
+                    var maxcost = a.ranks.map(x => x.cost).reduce((b, c) => b + c);
                     Vue.set(a, 'rankLevel', 0);
                     Vue.set(a, 'totalCost', 0);
                     Vue.set(a, 'maxCost', maxcost);
@@ -129,6 +125,9 @@ import Vue from 'vue'
                     counter += abilities[i].totalCost;
                 }
                 return counter;
+            },
+            isLoading() {
+                return this.$store.getters.isLoading;
             }
         }
     }

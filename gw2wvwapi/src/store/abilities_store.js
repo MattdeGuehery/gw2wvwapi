@@ -2,7 +2,6 @@ import axios from 'axios'
 import Vue from 'vue'
 export default {
     state: {
-        isLoading: false,
         Abilities: {},
         AllAbilities: {},
         removedAbilities: {}
@@ -49,9 +48,6 @@ export default {
                 }
             }
             state.removedAbilities = removedObj;
-        },
-        isLoading(state, value) {
-            state.isLoading = value;
         }
     },
     actions: {
@@ -104,6 +100,7 @@ export default {
                 store.commit('saveAbilities', abilities);
                 store.commit('saveAllAbilities', abilities);
             }).catch(function(err) {
+                store.commit('isLoading', false);
                 console.log(err);
             });
         },
@@ -129,6 +126,7 @@ export default {
                 }, {});
                 store.commit('saveAbilities', abilities);
             }).catch((err) => {
+                store.commit('isLoading', false);
                 console.log(err);
             });
         }

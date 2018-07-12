@@ -35,7 +35,7 @@ PUBLIC.httpGetWithAuth = async function(url_address, apikey) {
         }
     }
 
-    return _req(options);
+    return _reqget(options);
 }
 
 PUBLIC.httpPostWithAuth = async function(url_address, body, apikey) {
@@ -51,7 +51,7 @@ PUBLIC.httpPostWithAuth = async function(url_address, body, apikey) {
         }
     }
 
-    return _req(options);
+    return _reqpost(options);
 }
 
 PUBLIC.Promise.httpGet = async function(url_address) {

@@ -1,4 +1,4 @@
-var GW2API = require('../../../GW2API');
+var GW2API = require('../../../../GW2API');
 
 var expect = require('chai').expect;
 

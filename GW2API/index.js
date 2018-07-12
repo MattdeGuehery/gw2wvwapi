@@ -20,5 +20,4 @@ PUBLIC.WebRequest = WebRequest;
 PUBLIC.Worlds = Worlds;
 PUBLIC.WvW = WvW;
 
-
 module.exports = PUBLIC;

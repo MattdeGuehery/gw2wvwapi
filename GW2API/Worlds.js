@@ -10,7 +10,7 @@ const base_endpoint = '/v2/worlds';
 PUBLIC.Get = {};
 
 PUBLIC.Get.All = function() {
-    let URL = API.base_url + base_endpoint;
+    let URL = API.base_url + base_endpoint + '?ids=all';
     return HTTP.Promise.httpGet(URL).then((result) => {
         return result;
     });
@@ -24,7 +24,7 @@ PUBLIC.Get.ById = function(worldids) {
     let URL = API.base_url + base_endpoint + query_param;
     return HTTP.Promise.httpGet(URL).then((result) => {
         return result;
-    })
+    });
 }
 
 module.exports = PUBLIC;

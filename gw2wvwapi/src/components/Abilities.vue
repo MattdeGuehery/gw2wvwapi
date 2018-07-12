@@ -5,22 +5,26 @@
             <el-col :span="12"><el-button :disabled="Object.keys(removedAbilities).length === 0" :loading="isLoading" type="primary" class="abilities-button" @click="undoAbilityRemove">Undo Remove</el-button></el-col>
         </el-row>
         <el-collapse class="margin-space-bottom collapse">
-            <el-row class="margin-space-bottom">
-                <el-col :span="24"><el-button :disabled="checkedAbilities.length === 0" :loading="isLoading" type="primary" class="abilities-button" @click="getSelectedAbilities">Get Selected Abilities</el-button></el-col>
-            </el-row>
-            <el-row class="margin-space-bottom">
-                <el-col>
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleSelectAllChange" border>Select All</el-checkbox>
-                </el-col>
-                <el-checkbox-group v-model="checkedAbilities" @change="handleAbilitySelection">
-                    <el-col :span="24">
-                        <el-checkbox v-for="ability in AllAbilities" :name="ability.name" :label="ability.name" :value="ability.name" :checked="ability.isChecked" :key="ability.id" border>{{ ability.name }}</el-checkbox>
+            <el-collapse-item title="Select Abilities">
+                <el-row class="margin-space-bottom">
+                    <el-col :span="24"><el-button :disabled="checkedAbilities.length === 0" :loading="isLoading" type="primary" class="abilities-button" @click="getSelectedAbilities">Get Selected Abilities</el-button></el-col>
+                </el-row>
+                <el-row class="margin-space-bottom">
+                    <el-col>
+                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleSelectAllChange" border>Select All</el-checkbox>
                     </el-col>
-                </el-checkbox-group>
-            </el-row>
+                    <el-checkbox-group v-model="checkedAbilities" @change="handleAbilitySelection">
+                        <el-col :span="24">
+                            <el-checkbox v-for="ability in AllAbilities" :name="ability.name" :label="ability.name" :value="ability.name" :checked="ability.isChecked" :key="ability.id" border>{{ ability.name }}</el-checkbox>
+                        </el-col>
+                    </el-checkbox-group>
+                </el-row>
+            </el-collapse-item>
         </el-collapse>
         <el-container class="margin-space-bottom" v-for="(a, index) in Abilities" :key="a.id">
-            <el-aside width="128px"><img class="aside icon" :src="a.icon" /></el-aside>
+            <el-aside width="128px">
+                <!-- <img class="aside icon" :src="a.icon" /> -->
+            </el-aside>
             <el-container>
                 <el-header class="background margin-space-bottom"><h2>{{ a.name }}</h2></el-header>
                 <el-row type="flex" justify="end">
@@ -39,7 +43,9 @@
                     </el-row>
                 </el-main>
             </el-container>
-            <el-aside><el-button type="danger" @click="removeAbility(index)">Remove Rank</el-button><br/></el-aside>
+            <el-aside>
+                <el-button type="danger" @click="removeAbility(index)">Remove Rank</el-button><br/>
+            </el-aside>
         </el-container>
     </div>
 </template>
@@ -146,7 +152,7 @@
                 return this.$store.state.abilities.AllAbilities;
             },
             isLoading() {
-                return this.$store.state.abilities.isLoading;
+                return this.$store.getters.isLoading;
             },
             removedAbilities() {
                 return this.$store.state.abilities.removedAbilities;
@@ -160,11 +166,6 @@
         display: inline-block;
         font-size: 1.2em;
         width: 40em;
-    }
-
-    .collapse {
-        padding-top: 20px;
-        background-color: #EFEFEF;
     }
 
     .el-checkbox {

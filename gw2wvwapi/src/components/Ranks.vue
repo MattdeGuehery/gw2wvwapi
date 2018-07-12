@@ -22,8 +22,6 @@
 </template>
 
 <script>
-    import store from '../store'
-    import axios from 'axios'
     export default {
         name: 'Ranks',
         data: function() {
@@ -38,6 +36,9 @@
         computed: {
             AllRanks() {
                 return this.$store.state.ranks.AllRanks;
+            },
+            isLoading() {
+                return this.$store.getters.isLoading;
             }
         }
     }
