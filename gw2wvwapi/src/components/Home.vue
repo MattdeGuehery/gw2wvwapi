@@ -48,7 +48,6 @@
             'objectives': Objectives
         },
         mounted() {
-            this.getBuildNumber();
         },
         methods: {
             switchDarkMode(value) {

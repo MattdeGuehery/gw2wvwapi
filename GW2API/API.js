@@ -59,8 +59,7 @@ PUBLIC.getBuildNumber = async function() {
  * @throws {gw2apiError} if ids param doesn't exist or is a string that contains spaces
  */
 PUBLIC.parseIDQueryParams = function(ids) {
-    let api = new API();
-    api.checkParams(true, arguments.length === 1, 'function parseIDQueryParams requires a parameter of ids');
+    PUBLIC.checkParams(true, arguments.length === 1, 'function parseIDQueryParams requires a parameter of ids');
     let formattedIds = '';
     if (ids && Array.isArray(ids) && ids.length) {
         // It's an array

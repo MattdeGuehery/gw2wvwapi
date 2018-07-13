@@ -14,6 +14,9 @@ PUBLIC.Get.Abilities.All = function() {
      * https://wiki.guildwars2.com/wiki/API:2/wvw/abilities
      * @return all WvW abilities
      */
+
+    this.ParamSchema = {};
+
     let url = current_url;
 
     return HTTP.Promise.httpGet(url).then(function(result) {
